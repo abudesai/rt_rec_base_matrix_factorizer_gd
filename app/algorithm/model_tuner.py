@@ -106,8 +106,8 @@ def tune_hyperparameters(data, data_schema, num_trials, hyper_param_path, hpt_re
     # perform train/valid split on the training data 
     train_data, valid_data = train_test_split(data, test_size=model_cfg['valid_split'])    
     train_data, valid_data, _  = model_trainer.preprocess_data(train_data, valid_data, data_schema)   
-    train_X, train_y = train_data['X'].astype(np.float), train_data['y'].astype(np.float)
-    valid_X, valid_y = valid_data['X'].astype(np.float), valid_data['y'].astype(np.float)           
+    train_X, train_y = train_data['X'], train_data['y'].astype(np.float)
+    valid_X, valid_y = valid_data['X'], valid_data['y'].astype(np.float)           
     
     # Scikit-optimize objective function
     @use_named_args(hpt_space)
