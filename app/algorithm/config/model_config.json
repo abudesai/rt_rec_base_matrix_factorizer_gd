@@ -1,0 +1,17 @@
+{
+  "pp_params": {
+    "int_fields": {
+      "USER_ID_INT_COL": "user_id_int",
+      "ITEM_ID_INT_COL": "item_id_int",
+      "RATING_INT_COL": "rating_int",
+      "PRED_RATING_COL": "pred_rating",
+      "PRED_RATING_INT_COL": "pred_int_rating"
+    },
+    "pp_step_names": {
+      "USER_ITEM_MAPPER": "user_item_mapper",
+      "TARGET_SCALER": "target_scaler",
+      "XY_SPLITTER": "xy_splitter"
+    }
+  },
+  "valid_split": 0.1
+}

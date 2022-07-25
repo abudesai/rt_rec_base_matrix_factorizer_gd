@@ -1,0 +1,12 @@
+{
+    "problemCategory": "recommenders_base",
+    "version": "1.0",
+    "inputDatasets": {
+        "recommenderBaseMainInput": {
+            "idField": "Rating-ID",
+            "userField": "User-ID",
+            "itemField": "ISBN",
+            "targetField": "Book-Rating"
+        }
+    }
+}
