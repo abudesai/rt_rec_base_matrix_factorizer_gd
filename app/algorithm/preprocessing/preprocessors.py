@@ -22,13 +22,14 @@ class UserItemIdMapper(BaseEstimator, TransformerMixin):
 
         # self.user_ids = self.user_ids.sample(n=1000, replace=False, random_state=42)        
         
-        self.user_ids[self.user_id_int_col] = self.user_ids[self.user_id_col].factorize()[0]
+        self.user_ids[self.user_id_int_col] = self.user_ids[self.user_id_col].factorize(na_sentinel=None)[0]
+        
         self.users_orig_to_new = dict( zip(self.user_ids[self.user_id_col], 
             self.user_ids[self.user_id_int_col]) )   
 
         self.item_ids = data[[self.item_id_col]].drop_duplicates()        
         
-        self.item_ids[self.item_id_int_col] = self.item_ids[self.item_id_col].factorize()[0]
+        self.item_ids[self.item_id_int_col] = self.item_ids[self.item_id_col].factorize(na_sentinel=None)[0]
 
         self.items_orig_to_new = dict( zip(self.item_ids[self.item_id_col], 
             self.item_ids[self.item_id_int_col]) )
@@ -46,6 +47,7 @@ class UserItemIdMapper(BaseEstimator, TransformerMixin):
 
         df[self.user_id_int_col] = df[self.user_id_col].map(self.users_orig_to_new)
         df[self.item_id_int_col] = df[self.item_id_col].map(self.items_orig_to_new)
+        
         return df
 
 
@@ -100,6 +102,7 @@ class XYSplitter(BaseEstimator, TransformerMixin):
     def fit(self, data): return self
     
     def transform(self, data):  
+                
         X = data[[self.user_int_col, self.item_int_col]].values
         
         ids = data[self.id_col].values
