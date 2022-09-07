@@ -22,7 +22,7 @@ def get_data(data_path):
     if len(input_files) == 0: raise ValueError(f'There are no data files in {data_path}.')
     raw_data = [ pd.read_csv(file) for file in input_files ]
     data = pd.concat(raw_data)
-    return 
+    return data
 
 
 def get_data_schema(data_schema_path): 

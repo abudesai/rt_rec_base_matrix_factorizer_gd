@@ -11,7 +11,7 @@ import algorithm.model_trainer as model_trainer
 import algorithm.preprocessing.pipeline as pipeline
 import algorithm.model.recommender as recommender
 
-# These are the paths to where SageMaker mounts interesting things in your container.
+# Paths for inputs, model, outputs for ml_vol mounted to the container.
 prefix = '/opt/ml_vol/'
 data_path = os.path.join(prefix, 'inputs', 'data')
 data_schema_path = os.path.join(prefix, 'inputs', 'data_config')

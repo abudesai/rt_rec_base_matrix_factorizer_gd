@@ -10,7 +10,7 @@ warnings.filterwarnings('ignore')
 import algorithm.utils as utils
 import algorithm.model_server as model_server
 
-# These are the paths to where SageMaker mounts interesting things in your container.
+# Paths for inputs, model, outputs for ml_vol mounted to the container.
 prefix = '/opt/ml_vol/'
 
 data_path = os.path.join(prefix, 'inputs', 'data')

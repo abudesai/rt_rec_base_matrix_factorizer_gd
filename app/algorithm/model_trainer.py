@@ -62,7 +62,6 @@ def train_model(train_X, train_y, hyper_params, verbose=0):
             y=train_y, 
             validation_split=model_cfg["valid_split"],
             epochs=100,
-            batch_size=256, 
             verbose=verbose,
         )  
     

@@ -10,7 +10,7 @@ warnings.filterwarnings('ignore')
 import algorithm.utils as utils
 import algorithm.model_tuner as model_tuner
 
-# These are the paths to where SageMaker mounts interesting things in your container.
+# Paths for inputs, model, outputs for ml_vol mounted to the container.
 prefix = '/opt/ml_vol/'
 
 data_path = os.path.join(prefix, 'inputs', 'data')
@@ -28,7 +28,7 @@ training_path = os.path.join(data_path, channel_name, "recommenderBaseMainInput"
 
 
 
-def tune(num_trials=10):    
+def tune(num_trials=5):    
     try:        
         print('Starting the hyperparameter tuning.')  
         # Read data
@@ -54,7 +54,7 @@ def tune(num_trials=10):
     
 if __name__ == '__main__': 
     parser = argparse.ArgumentParser()
-    parser.add_argument("-n", "--num_trials", type=int, default=10, help="the number of trials to run for HPO")
+    parser.add_argument("-n", "--num_trials", type=int, default=5, help="the number of trials to run for HPO")
     args = parser.parse_args()
     
     tune(num_trials=args.num_trials)

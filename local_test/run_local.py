@@ -34,6 +34,10 @@ test_results_path = "test_results"
 if not os.path.exists(test_results_path): os.mkdir(test_results_path)
 
 
+# change this to whereever you placed your local testing datasets
+local_datapath = "./../../datasets" 
+
+
 '''
 this script is useful for doing the algorithm testing locally without needing
 to build the docker image and run the container.
@@ -81,13 +85,12 @@ def create_ml_vol():
 
 
 def copy_example_files(dataset_name):
-    data_dir = f"./examples/{dataset_name}"
     # data schema
-    shutil.copyfile(f"{data_dir}/{dataset_name}_schema.json", os.path.join(data_schema_path, f"{dataset_name}_schema.json"))
-    # train data
-    shutil.copyfile(f"{data_dir}/{dataset_name}_train.csv", os.path.join(train_data_path, f"{dataset_name}_train.csv"))
-    # test data
-    shutil.copyfile(f"{data_dir}/{dataset_name}_test.csv", os.path.join(test_data_path, f"{dataset_name}_test.csv"))
+    shutil.copyfile(f"{local_datapath}/{dataset_name}/{dataset_name}_schema.json", os.path.join(data_schema_path, f"{dataset_name}_schema.json"))
+    # train data    
+    shutil.copyfile(f"{local_datapath}/{dataset_name}/{dataset_name}_train.csv", os.path.join(train_data_path, f"{dataset_name}_train.csv"))    
+    # test data     
+    shutil.copyfile(f"{local_datapath}/{dataset_name}/{dataset_name}_test.csv", os.path.join(test_data_path, f"{dataset_name}_test.csv"))    
     # hyperparameters
     shutil.copyfile("./examples/hyperparameters.json", os.path.join(hyper_param_path, "hyperparameters.json"))
 
@@ -137,17 +140,18 @@ def load_and_test_algo():
 
 
 def set_id_and_target_cols(dataset_name):
-    global id_col, target_col 
+    global id_col, target_col, test_key
     data_schema = utils.get_data_schema(data_schema_path)
     # set the id attribute
     id_col = data_schema["inputDatasets"]["recommenderBaseMainInput"]["idField"]       
     # set the target attribute
     target_col = data_schema["inputDatasets"]["recommenderBaseMainInput"]["targetField"]   
+    # test_key
+    test_key = pd.read_csv(f"{local_datapath}/{dataset_name}/{dataset_name}_test_key.csv")
 
 
 def score(test_data, predictions):
-    N_exp = test_data.shape[0]
-    predictions = predictions.merge(test_data[[id_col, target_col]], on=id_col)
+    predictions = predictions.merge(test_key[[id_col, target_col]], on=id_col)
     rmse = mean_squared_error(predictions[target_col], predictions['prediction'], squared=False)
     mae = mean_absolute_error(predictions[target_col], predictions['prediction'])
     r2 = r2_score(predictions[target_col], predictions['prediction'])
@@ -211,13 +215,12 @@ def run_train_and_test(dataset_name, run_hpt, num_hpt_trials):
 
 if __name__ == "__main__":
     
-    num_hpt_trials = 10
+    num_hpt_trials = 5
     run_hpt_list = [False, True]
-    run_hpt_list = [True]
+    run_hpt_list = [False]
     
-    datasets = ["jester", "anime", "modcloth", "amazon_electronics", "community_art", 
-                    "book-crossing", "movielens_10m"]
-    datasets = ["jester"]
+    datasets = ["amazon_electronics_small", "anime", "jester", "modcloth", "book_crossing_small", "movielens_10m"]
+    datasets = ["book_crossing_small"]
     
     for run_hpt in run_hpt_list:
         all_results = []

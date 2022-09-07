@@ -12,7 +12,7 @@ from tensorflow.keras.optimizers import SGD, Adam
 from tensorflow.keras.callbacks import EarlyStopping, ReduceLROnPlateau, Callback
 
 
-MODEL_NAME = "MatrixFactorizer_using_GradDescent"
+MODEL_NAME = "recommender_base_matrix_factorizer_using_sgd"
 
 model_params_fname = "model_params.save"
 model_wts_fname = "model_wts.save"
@@ -34,13 +34,14 @@ class InfCostStopCallback(Callback):
 
 class Recommender():
 
-    def __init__(self, N, M, K, l2_reg=0., lr = 0.1, momentum = 0.9, **kwargs  ):
+    def __init__(self, N, M, K=10, l2_reg=1e-9, lr = 0.08, momentum = 0.9, batch_size=256, **kwargs  ):
         self.N = N
         self.M = M
         self.K = K
         self.l2_reg = l2_reg
         self.lr = lr
         self.momentum = momentum
+        self.batch_size = batch_size
 
         self.model = self.build_model()
         self.model.compile(
@@ -68,7 +69,7 @@ class Recommender():
         return model
 
 
-    def fit(self, X, y, validation_split=None, batch_size=256, epochs=25, verbose=0): 
+    def fit(self, X, y, validation_split=None, epochs=25, verbose=0): 
                 
         early_stop_loss = 'val_loss' if validation_split is not None else 'loss'
         early_stop_callback = EarlyStopping(monitor=early_stop_loss, min_delta = 1e-4, patience=3) 
@@ -78,7 +79,7 @@ class Recommender():
                 x = [ X[:, 0], X[:, 1] ],
                 y = y, 
                 validation_split = validation_split,
-                batch_size = batch_size,
+                batch_size = self.batch_size,
                 epochs=epochs,
                 verbose=verbose,
                 shuffle=True,
@@ -88,7 +89,7 @@ class Recommender():
 
 
     def predict(self, X): 
-        preds = self.model.predict([ X[:, 0], X[:, 1] ], verbose=1)
+        preds = self.model.predict([ X[:, 0], X[:, 1] ], verbose=0)
         return preds 
 
     def summary(self):
@@ -97,11 +98,11 @@ class Recommender():
     
     def evaluate(self, x_test, y_test): 
         """Evaluate the model and return the loss and metrics"""
-        if self.model is not None:
-            return self.model.evaluate(
+        return self.model.evaluate(
                 x = [ x_test[:, 0], x_test[:, 1] ],
                 y = y_test, 
-                verbose=0)       
+                verbose=0)   
+                
         
 
     def save(self, model_path): 
@@ -112,6 +113,7 @@ class Recommender():
             "l2_reg": self.l2_reg,
             "lr": self.lr,
             "momentum": self.momentum, 
+            "batch_size": self.batch_size, 
         }
         joblib.dump(model_params, os.path.join(model_path, model_params_fname))
 

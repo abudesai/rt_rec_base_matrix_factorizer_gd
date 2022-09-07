@@ -22,7 +22,7 @@
     "short_desc": "Batch size for training",
     "default": 256,
     "type": "categorical",
-    "categorical_vals": [64, 128, 256, 512],
+    "categorical_vals": [128, 256, 512],
     "run_HPO": true
   },
   {

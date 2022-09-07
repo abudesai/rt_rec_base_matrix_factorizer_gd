@@ -106,5 +106,6 @@ class XYSplitter(BaseEstimator, TransformerMixin):
         
         if self.ratings_int_col in data.columns: 
             y = data[self.ratings_int_col].values
+        else: y = None
                 
         return { 'X': X, 'y': y, 'ids': ids }
