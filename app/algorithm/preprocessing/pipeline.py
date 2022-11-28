@@ -36,7 +36,7 @@ def get_preprocess_pipeline(pp_params, model_cfg):
                     preprocessors.TargetScaler(
                         target_col = pp_params["target_field"], 
                         target_int_col = cfg_pp_int_fields["RATING_INT_COL"], 
-                        scaler_type='minmax',   # minmax, standard
+                        scaler_type='standard',   # minmax, standard
                     )
                 )
             ),
